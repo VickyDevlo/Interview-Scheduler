@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { MdDashboard, MdManageAccounts } from "react-icons/md";
+import { MdDashboard } from "react-icons/md";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 
 const Home = () => {
@@ -12,9 +12,11 @@ const Home = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="flex items-start">
-        <div className="inline-block min-h-screen border-r-2 border-gray-300 
-        md:w-60 sticky top-0">
+      <div className="flex">
+        <div
+          className="inline-block min-h-screen border-r-2 border-gray-300 
+        md:w-60 sticky top-0"
+        >
           <ul className="flex flex-col items-start pt-5 text-gray-800">
             <NavLink
               className={({ isActive }) =>
