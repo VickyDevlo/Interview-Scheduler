@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo, useEffect } from "react";
+import React, { useContext, useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -18,9 +18,10 @@ const Dashboard = () => {
   });
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [updatedInterviews, setUpdatedInterviews] = useState(interviews);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const dropdownRefs = useRef({});
   const navigate = useNavigate();
 
-  // Sync state whenever interviews update
   useEffect(() => {
     setUpdatedInterviews([...interviews]);
   }, [interviews]);
@@ -59,6 +60,20 @@ const Dashboard = () => {
       );
     });
   }, [interviews, filters]);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      Object.values(dropdownRefs.current).forEach((ref, id) => {
+        if (ref && !ref.contains(event.target)) {
+          setOpenDropdown((prev) => (prev === id ? null : prev));
+        }
+      });
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="md:p-6 p-3 container mx-auto">
@@ -86,7 +101,7 @@ const Dashboard = () => {
             onClick={() => setShowCalender(!showCalender)}
             className="cursor-pointer h-fit p-1 rounded-md max-md:hidden"
           >
-            <SlCalender size={24}/>
+            <SlCalender size={24} />
           </span>
         )}
         {showCalender && (
@@ -173,7 +188,7 @@ const Dashboard = () => {
                   </td>
                 </tr>
               ) : (
-                filteredInterviews.map((interview) => (
+                filteredInterviews.map((interview, index) => (
                   <tr
                     key={interview.id}
                     className="text-gray-700 text-center border-b border-gray-300"
@@ -194,27 +209,43 @@ const Dashboard = () => {
                       {interview.type}
                     </td>
                     <td className="py-2 max-sm:px-2 px-4 relative">
-                      <div className="relative inline-block text-left group">
-                        <button className="text-gray-500 action-button">
-                          ...
+                      <div
+                        ref={(el) => (dropdownRefs.current[index] = el)}
+                        className="relative inline-block text-left"
+                      >
+                        <button
+                          onClick={() =>
+                            setOpenDropdown((prev) =>
+                              prev === index ? null : index
+                            )
+                          }
+                          className="text-gray-500 hover:text-gray-700 px-3 py-1 rounded-md focus:outline-none cursor-pointer"
+                        >
+                          &#x22EE;
                         </button>
-                        <div className="hidden absolute z-10 right-4 sm:right-0 sm:left-0 top-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow group-hover:block">
-                          <button
-                            onClick={() => navigate(`/edit/${interview.id}`)}
-                            className="block w-full text-left px-4 py-2 cursor-pointer
-                             text-blue-600 hover:bg-gray-100"
-                          >
-                            <FaEdit className="inline-block mr-2" /> Edit
-                          </button>
-                          <button
-                            onClick={() => deleteInterview(interview.id)}
-                            className="block w-full text-left px-4 py-2 cursor-pointer
-                             text-red-600 hover:bg-gray-100"
-                          >
-                            <RiDeleteBin5Fill className="inline-block mr-2" />
-                            Delete
-                          </button>
-                        </div>
+
+                        {openDropdown === index && (
+                          <div className="absolute right-0 top-full mt-1 w-36 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-50">
+                            <button
+                              onClick={() => {
+                                navigate(`/edit/${interview.id}`);
+                                setOpenDropdown(null);
+                              }}
+                              className="flex items-center w-full px-4 py-2 text-sm text-blue-600 hover:bg-gray-100"
+                            >
+                              <FaEdit className="mr-2" /> Edit
+                            </button>
+                            <button
+                              onClick={() => {
+                                deleteInterview(interview.id);
+                                setOpenDropdown(null);
+                              }}
+                              className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                            >
+                              <RiDeleteBin5Fill className="mr-2" /> Delete
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </td>
                   </tr>
