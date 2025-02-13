@@ -32,6 +32,7 @@ const Dashboard = () => {
 
   const clearFilters = () => {
     setFilters({ date: "", interviewer: "", candidate: "" });
+    setSelectedDate(new Date());
   };
 
   const handleDateChange = (date) => {
@@ -43,6 +44,12 @@ const Dashboard = () => {
 
     setSelectedDate(date);
     setFilters({ ...filters, date: formattedDate });
+  };
+
+  const handleResetCalendar = () => {
+    setFilters({ date: "", interviewer: "", candidate: "" });
+    setShowCalender(!showCalender);
+    setSelectedDate(new Date());
   };
 
   const filteredInterviews = useMemo(() => {
@@ -109,7 +116,7 @@ const Dashboard = () => {
             <div className="flex justify-between ">
               <h2 className="text-lg font-semibold mb-3">Interview Calendar</h2>
               <span
-                onClick={() => setShowCalender(!showCalender)}
+                onClick={handleResetCalendar}
                 className="cursor-pointer font-medium"
               >
                 X
