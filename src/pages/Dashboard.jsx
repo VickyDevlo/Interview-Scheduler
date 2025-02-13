@@ -89,17 +89,17 @@ const Dashboard = () => {
       <div className="flex flex-wrap gap-4 mb-6 items-top">
         <InputField
           type="text"
-          name="interviewer"
-          placeholder="Filter by Interviewer"
-          value={filters.interviewer}
+          name="candidate"
+          placeholder="Filter by Candidate"
+          value={filters.candidate}
           onChange={handleFilterChange}
           className="capitalize"
         />
         <InputField
           type="text"
-          name="candidate"
-          placeholder="Filter by Candidate"
-          value={filters.candidate}
+          name="interviewer"
+          placeholder="Filter by Interviewer"
+          value={filters.interviewer}
           onChange={handleFilterChange}
           className="capitalize"
         />
@@ -169,20 +169,21 @@ const Dashboard = () => {
           <table className="w-full max-w-4xl bg-white border border-gray-200 max-sm:text-sm">
             <thead>
               <tr className="border-b border-gray-400 text-center">
-                <th className="py-2 max-sm:px-1 px-1 max-sm:text-xs sm:whitespace-nowrap">
+                <th className="py-2 max-sm:px-1 px-4 max-sm:hidden">Sr.No.</th>
+                <th className="py-2 max-sm:px-1 px-4 max-sm:text-xs sm:whitespace-nowrap">
                   Candidate
                 </th>
                 <th className="py-2 max-sm:px-1 px-4 max-sm:hidden">
                   Interviewer
                 </th>
-                <th className="py-2 max-sm:px-1 px-1 max-sm:text-xs sm:whitespace-nowrap">
+                <th className="py-2 max-sm:px-1 px-4 max-sm:text-xs sm:whitespace-nowrap">
                   Date
                 </th>
-                <th className="py-2 max-sm:px-1 px-1 max-sm:text-xs sm:whitespace-nowrap">
+                <th className="py-2 max-sm:px-1 px-4 max-sm:text-xs sm:whitespace-nowrap">
                   Time
                 </th>
                 <th className="py-2 max-sm:px-1 px-4 max-sm:hidden">Type</th>
-                <th className="py-2 max-sm:px-1 px-1 max-sm:text-xs sm:whitespace-nowrap">
+                <th className="py-2 max-sm:px-1 px-4 max-sm:text-xs sm:whitespace-nowrap">
                   Action
                 </th>
               </tr>
@@ -200,6 +201,9 @@ const Dashboard = () => {
                     key={interview.id}
                     className="text-gray-700 text-center border-b border-gray-300"
                   >
+                     <td className="py-2 max-sm:px-2 px-4 font-medium max-sm:hidden">
+                      {index + 1}
+                    </td>
                     <td className="py-2 max-sm:px-2 px-4 font-medium capitalize">
                       {interview.candidate}
                     </td>
@@ -215,7 +219,7 @@ const Dashboard = () => {
                     <td className="py-2 max-sm:px-2 px-4 font-medium max-sm:hidden">
                       {interview.type}
                     </td>
-                    <td className="py-2 max-sm:px-2 px-4 relative">
+                    <td className="py-2 max-sm:px-2 px-4 font-medium relative">
                       <div
                         ref={(el) => (dropdownRefs.current[index] = el)}
                         className="relative inline-block text-left"
